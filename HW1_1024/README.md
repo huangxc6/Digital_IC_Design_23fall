@@ -4,29 +4,29 @@
 
 对CLA_4进行测试，程序正常执行，结果正确。
 
-![CLA_4_finish](images\CLA_4_finish.png)
+![CLA_4_finish](images/CLA_4_finish.png)
 
-![CLA_4_wave](images\CLA_4_wave.png)
+![CLA_4_wave](images/CLA_4_wave.png)
 
-![CLA_4_schematic](images\CLA_4_schematic.png)
+![CLA_4_schematic](images/CLA_4_schematic.png)
 
 # 32位超前进位加法器(CLA_32.v)
 
 例化8个4位超前进位加法器即可。
 
-![ClA_32_schematic](images\ClA_32_schematic.png)
+![ClA_32_schematic](images/ClA_32_schematic.png)
 
 
 
 给a、b、cin随机赋初值，运算结果均正确，error_count始终为0。
 
-![ClA_32_wave](images\ClA_32_wave.png)
+![ClA_32_wave](images/ClA_32_wave.png)
 
 
 
 # ALU设计(alu_core.v)
 
-![alu_core_logical](images\alu_core_logical.png)
+![alu_core_logical](images/alu_core_logical.png)
 
 Cin = 1 ， M = 0 ，执行逻辑运算操作。
 
@@ -44,7 +44,7 @@ S = 8 ，执行 a AND b操作，结果应为(0000_0000_0000_0001_0001_0100_0000_
 
 
 
-![alu_core_calculate](images\alu_core_calculate.png)
+![alu_core_calculate](images/alu_core_calculate.png)
 
 M = 1时执行算术运算，a = 8932d612， b = 47ecdb8f。
 
@@ -56,4 +56,4 @@ a - b = 4145 FA83 ， 结果正确。
 
 多次运算后，error_count始终为0，表示算数运算结果正确。
 
-![alu_core_calculate_error_count=0](images\alu_core_calculate_error_count=0.png)
+![alu_core_calculate_error_count=0](images/alu_core_calculate_error_count=0.png)

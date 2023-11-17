@@ -1,14 +1,14 @@
 module data_top (
 	input wire			clk		,    // Clock
-	input wire			reset_n	,  // Asynchronous reset active low
+	input wire			reset_n	,    // Asynchronous reset active low
 	input wire			start 	,
 	input wire	[7:0]	data_in ,
 	input wire			byte_en ,
 
-	output reg  [4:0] dmod    ,
-	output reg 		  mod_en  ,
-	output reg		  full
-	
+	output reg  [4:0]   dmod    ,
+	output reg 		    mod_en  ,
+	output reg		    full
+	  
 );
 	reg	[7:0]	data_o_trans  ;
 	reg	[7:0]	data_o_fifo   ;

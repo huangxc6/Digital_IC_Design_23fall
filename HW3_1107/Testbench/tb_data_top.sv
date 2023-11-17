@@ -1,6 +1,6 @@
 
 `timescale 1ns/1ps
-module tb_data_top (); /* this is automatically generated */
+module tb_data_top ();
 
 	// clock
 	logic clk;
@@ -13,7 +13,7 @@ module tb_data_top (); /* this is automatically generated */
 	logic reset_n;
 	initial begin
 		reset_n <= '0;
-		#10
+		#5
 		reset_n <= '1;
 	end
 
@@ -58,9 +58,9 @@ module tb_data_top (); /* this is automatically generated */
 		init();
 		repeat(10)@(posedge clk);
 
-		drive(10);
+		drive(100);
 
-		repeat(100)@(posedge clk);
+		repeat(10)@(posedge clk);
 		$finish;
 	end
 	// dump wave

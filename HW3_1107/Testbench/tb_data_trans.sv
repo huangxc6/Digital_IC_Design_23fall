@@ -1,6 +1,6 @@
 
 `timescale 1ns/1ps
-module tb_data_trans (); /* this is automatically generated */
+module tb_data_trans ();
 
 	// clock
 	logic clk;
@@ -13,7 +13,7 @@ module tb_data_trans (); /* this is automatically generated */
 	logic reset_n;
 	initial begin
 		reset_n <= '0;
-		#10
+		#5
 		reset_n <= '1;
 	end
 
@@ -99,7 +99,7 @@ module tb_data_trans (); /* this is automatically generated */
 		$display("random seed : %0d", $unsigned($get_initial_random_seed()));
 		if ( $test$plusargs("fsdb") ) begin
 			$fsdbDumpfile("tb_data_trans.fsdb");
-			$fsdbDumpvars(0, "tb_data_trans", "+mda", "+functions");
+			$fsdbDumpvars(0, "tb_data_trans");
 		end
 	end
 endmodule

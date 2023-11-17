@@ -1,7 +1,7 @@
 module data_mod (
 	input  wire  	  clk     , // Clock
 	input  wire  	  reset_n , // Asynchronous reset active low
-	input  wire 	  empty     ,	// FIFO empty
+	input  wire 	  empty   ,	// FIFO empty
 	input  wire [7:0] data_in ,
 
 	output wire	      rd 	  ,	//FIFO rd_en
@@ -10,21 +10,8 @@ module data_mod (
 );
 	reg [2:0] state  	  ;
 	reg [7:0] data_in_tmp ;
-	// assign rd = ~rdy ;	// empty = 0, begin read FIFO
 
 	assign rd = ~empty && state!= 3'd2 && state!= 3'd5 && state!= 3'd7;
-
-	// always @(posedge clk or negedge reset_n) begin
-	// 	if(~reset_n) begin
-	// 		rd <= 1'b0;
-	// 	end else begin
-	// 		if (~empty && state!= 3'd2 && state!= 3'd5 && state!= 3'd7) begin
-	// 			rd <= 1'b1;
-	// 		end else begin
-	// 			rd <= 1'b0;
-	// 		end
-	// 	end
-	// end
 
 	always @(posedge clk or negedge reset_n) begin : proc_state
 		if(~reset_n) begin

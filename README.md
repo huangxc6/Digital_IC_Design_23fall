@@ -38,7 +38,7 @@ Here are some assignments for digital integrated circuit design in the fall seme
 
 
 ## HW4_clk_top
-[HW4_1206](HW6_1206)
+[HW4_1206](HW4_1206)
 
 ![req2](HW4_1206/images/req2.png)
 

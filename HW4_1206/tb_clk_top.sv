@@ -36,7 +36,7 @@ module tb_clk_top ();
 	task drive(int iter);
 		for(int it = 0; it < iter; it++) begin
 			rcc_cr_in <= it;
-			# 1000000;  // 2ms
+			# 1000000;  // 1ms
 		end
 	endtask
 

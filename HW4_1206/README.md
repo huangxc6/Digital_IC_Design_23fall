@@ -3,7 +3,7 @@
 
 ![req2](images/req2.png)
 
-# clock_gen
+# clock_gen模块
 
 产生三种不同频率的时钟
 
@@ -54,7 +54,7 @@ module clock_gen #(
 endmodule
 ```
 
-# clk_switch
+# clk_switch模块
 
 根据`rcc_cr`的值选择时钟，初始时钟为`clk_10M`
 
@@ -183,7 +183,7 @@ endmodule
 
 
 
-# rcc_cr
+# rcc_cr模块
 
 产生`rcc_cr`信号
 
@@ -233,6 +233,81 @@ module rcc_cr (
 endmodule
 ```
 
+# clk_top模块
+
+```verilog
+module clk_top (
+	input		rst_n		,  // Asynchronous reset active low
+	input [1:0] rcc_cr_in   ,
+
+	output 		clk_sys
+);
+
+	wire [1:0] rcc_cr ;
+	wire 	   clk_sys;
+
+	// generate thr clock
+	parameter PERIOD_10M  = 100  ;
+	parameter PERIOD_32K  = 31250;
+	parameter PERIOD_100M = 10   ;
+
+	wire clk_10M ;
+	wire clk_32K ;
+	wire clk_100M;
+
+	clock_gen #(
+			.PERIOD_10M(PERIOD_10M),
+			.PERIOD_32K(PERIOD_32K),
+			.PERIOD_100M(PERIOD_100M)
+		) inst_clock_gen (
+			.clk_10M  (clk_10M),
+			.clk_32K  (clk_32K),
+			.clk_100M (clk_100M)
+		);
+
+	// Asynchronous reset, synchronous release
+	reg rst_n_sync_pre  ;
+    reg rst_n_sync      ;
+
+    always @ (posedge clk_sys or negedge rst_n) begin
+        if (rst_n == 1'b0) begin
+            rst_n_sync_pre <= 1'b0 ;
+            rst_n_sync     <= 1'b0 ;
+        end else begin
+            rst_n_sync_pre  <= 1'b1 ;
+            rst_n_sync      <= rst_n_sync_pre ;
+        end
+    end
+
+	// switch the clock
+	clk_switch inst_clk_switch
+		(
+			.clk_10M  (clk_10M),
+			.clk_32K  (clk_32K),
+			.clk_100M (clk_100M),
+			.rst_n    (rst_n_sync),
+			.rcc_cr   (rcc_cr),
+			.clk_sys  (clk_sys)
+		);
+
+	// rcc_cr generate
+	rcc_cr inst_rcc_cr 
+		(
+			.clk_sys(clk_sys), 
+			.rst_n(rst_n_sync), 
+			.rcc_cr_in(rcc_cr_in), 
+			.rcc_cr(rcc_cr)
+		);
+
+
+
+endmodule
+```
+
+
+
+
+
 # Testbench
 
 ```verilog
@@ -274,7 +349,7 @@ module tb_clk_top ();
 	task drive(int iter);
 		for(int it = 0; it < iter; it++) begin
 			rcc_cr_in <= it;
-			# 1000000;  // 2ms
+			# 1000000;  // 1ms
 		end
 	endtask
 
@@ -309,9 +384,15 @@ endmodule
 
 
 
+- 异步复位，同步释放
+
+![rst_n_sync](images/rst_n_sync.png)
+
+
+
 - 复位后，自动选择`clk_10M`，并开始计数，等待`clk_100M`时钟稳定
 
-![init](images/init.png)
+![init](images/10M_sync.png)
 
 
 
@@ -325,7 +406,7 @@ endmodule
 
 ![10M](images/10M.png)
 
-- `rcc_cr`为00时，`d_32K`为01，选择`clk_32K`；
+- `rcc_cr`为01时，`d_32K`为01，选择`clk_32K`；
 
 ![32K](images/32K.png)
 
@@ -334,4 +415,6 @@ endmodule
 ![100M](images/100M.png)
 
 ![100M_zoom](images/100M_zoom.png)
+
+
 

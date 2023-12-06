@@ -37,7 +37,7 @@ module clock_gen #(
 
 	initial begin
 		clk_100M = 1'b0 ;
-		# 3000000 		// 3ms
+		# 3_000_000 		// 3ms
 		forever #(PERIOD_100M / 2) clk_100M = ~clk_100M ;
 	end
 

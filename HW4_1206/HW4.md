@@ -183,7 +183,9 @@ endmodule
 
 
 
-根据所选系统时钟将`rcc_cr_in`写入
+# rcc_cr
+
+产生`rcc_cr`信号
 
 ```verilog
 module rcc_cr (
@@ -193,13 +195,38 @@ module rcc_cr (
 
 	output reg [1:0] rcc_cr 
 );
-	
+	reg flag 	   ;
+	reg [15:0] cnt ;
+
+	always @(posedge clk_sys or negedge rst_n) begin
+		if (rst_n == 1'b0) begin
+			flag <= 1'b0 ;
+		end
+		else if (cnt == 16'd29_955) begin
+			flag <= 1'b1 ;
+		end
+	end
+
+	always @(posedge clk_sys or negedge rst_n) begin
+		if (rst_n == 1'b0) begin
+			cnt <= 16'b0000_0000_0000_0000 ;
+		end
+		else if (flag == 1'b0) begin
+			cnt <= cnt + 1'b1 ;
+		end
+	end
 	always @(posedge clk_sys or negedge rst_n) begin
 		if (rst_n == 1'b0) begin
 			rcc_cr <= 2'b00 ;
 		end
-		else begin
+		else if (flag == 1'b1) begin
 			rcc_cr <= rcc_cr_in ;
+		end else begin
+			if (cnt  == 16'd29_955) begin
+				rcc_cr <= 2'b10  ;
+			end else begin
+				rcc_cr <= rcc_cr ;
+			end
 		end
 	end
 
@@ -241,13 +268,13 @@ module tb_clk_top ();
 		);
 
 	task init();
-		rcc_cr_in <= 2'b00;
+		rcc_cr_in <= 2'b10;
 	endtask
 
 	task drive(int iter);
 		for(int it = 0; it < iter; it++) begin
 			rcc_cr_in <= it;
-			# 2000000;  // 2ms
+			# 1000000;  // 2ms
 		end
 	endtask
 
@@ -255,7 +282,8 @@ module tb_clk_top ();
 		// do something
 
 		init();
-		# 3000 		// 3us
+		# 4_000_000 		// 4ms
+
 		drive(3);
 
 		# 3000 
@@ -273,24 +301,37 @@ endmodule
 
 ```
 
-# waveform
+# waveform & analysis
+
+- 波形如图所示
 
 ![wave](images/wave.png)
 
-波形如图所示，`rcc_cr`为00时，`d_10M`为1，选择`clk_10M`；
+
+
+- 复位后，自动选择`clk_10M`，并开始计数，等待`clk_100M`时钟稳定
+
+![init](images/init.png)
+
+
+
+- `clk_100M`时钟稳定后，自动切换到`clk_100M`，之后计数停止，开始由`rcc_cr_in`控制时钟切换
+
+![auto_swith](images/auto_swith.png)
+
+
+
+- `rcc_cr`为00时，`d_10M`为1，选择`clk_10M`；
 
 ![10M](images/10M.png)
 
-`rcc_cr`为00时，`d_32K`为01，选择`clk_32K`；
+- `rcc_cr`为00时，`d_32K`为01，选择`clk_32K`；
 
 ![32K](images/32K.png)
 
-`rcc_cr`为10时，`d_100M`为1，选择`clk_100M`。
+- `rcc_cr`为10时，`d_100M`为1，选择`clk_100M`。
 
 ![100M](images/100M.png)
 
+![100M_zoom](images/100M_zoom.png)
 
-
-更改`Testbench`，可见初始选择`clk_10M`
-
-![init](images/init.png)

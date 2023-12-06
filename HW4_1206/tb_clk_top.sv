@@ -30,13 +30,13 @@ module tb_clk_top ();
 		);
 
 	task init();
-		rcc_cr_in <= 2'b00;
+		rcc_cr_in <= 2'b10;
 	endtask
 
 	task drive(int iter);
 		for(int it = 0; it < iter; it++) begin
 			rcc_cr_in <= it;
-			# 2000000;  // 2ms
+			# 1000000;  // 2ms
 		end
 	endtask
 
@@ -44,7 +44,8 @@ module tb_clk_top ();
 		// do something
 
 		init();
-		# 3000 		// 3us
+		# 4_000_000 		// 4ms
+
 		drive(3);
 
 		# 3000 

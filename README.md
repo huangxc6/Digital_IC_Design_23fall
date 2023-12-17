@@ -43,3 +43,11 @@ Here are some assignments for digital integrated circuit design in the fall seme
 ![req2](HW4_1206/images/req2.png)
 
 ![req1](HW4_1206/images/req1.png)
+
+
+
+## HW5_rst_top
+
+[HW5_1216_rst](HW5_1216_rst)
+
+![req](HW5_1216_rst/images/req.png)
